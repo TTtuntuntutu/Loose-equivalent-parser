@@ -84,8 +84,26 @@ export default {
       while (this.parseNotes.length > 0) {
         this.parseNotes.pop();
       }
+
+      //结果显示
+      this.getResult(); 
+
       let player1, player2;
-      (player1 = eval(this.fstOperObj)), (player2 = eval(this.secOperObj));
+      try {
+        player1 = JSON.parse(this.fstOperObj);
+      } catch (e) {
+        player1 = eval(this.fstOperObj);
+      }
+      try {
+        player2 = JSON.parse(this.secOperObj);
+      } catch (e) {
+        player2 = eval(this.secOperObj);
+      }
+
+      //初始！
+      this.parseNotes.push(
+        `${JSON.stringify(player1)} == ${JSON.stringify(player2)}`
+      );
 
       //如果两个都是对象，直接游戏结束(注意排除都是null的情况)
       if (
@@ -94,67 +112,84 @@ export default {
         (typeof player2 === "object" && player2)
       ) {
         this.parseNotes.push(
-          `${this.fstOperObj} == ${this.secOperObj} //false`
+          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //false`
         );
+        this.parseNotes.push(`false`);
         return;
       }
       //抽象等价性：存在object,ToPrimitive(object)
       if (typeof player1 === "object" && player1) {
         player1 = this.toPrimitive(player1);
+        this.parseNotes.push(
+          `${JSON.stringify(player1)} == ${JSON.stringify(
+            player2
+          )} //对象转化为简单值`
+        );
       }
       if (typeof player2 === "object" && player2) {
         player2 = this.toPrimitive(player2);
+        this.parseNotes.push(
+          `${JSON.stringify(player1)} == ${JSON.stringify(
+            player2
+          )} //对象转化为简单值`
+        );
       }
 
       //抽象等价性：考虑 null 与 undefined
       let sum = this.sumNullUndefined(player1, player2);
       if (sum === 2) {
-        this.parseNotes.push(`${this.fstOperObj} == ${this.secOperObj} //true`);
+        this.parseNotes.push(
+          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //true`
+        );
+        this.parseNotes.push(`true`);
         return;
       } else if (sum === 1) {
         this.parseNotes.push(
-          `${this.fstOperObj} == ${
-            this.secOperObj
-          } //false 除本身以外，null只与undefined宽松等价相等`
+          `${JSON.stringify(player1)} == ${JSON.stringify(
+            player2
+          )} //false 除本身以外，null只与undefined宽松等价相等`
         );
+        this.parseNotes.push(`false`);
         return;
       }
 
       //抽象等价性： 任何东西与boolean
       if (typeof player1 === "boolean" && typeof player2 === "boolean") {
         this.parseNotes.push(
-          `${this.fstOperObj} == ${this.secOperObj} //显而易见`
+          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //显而易见`
         );
+        this.parseNotes.push(`${player1 == player2}`);
         return;
       } else if (typeof player1 === "boolean") {
         player1 = player1 === true ? 1 : 0;
-        this.parseNotes.push(`${player1} == ${this.secOperObj}`);
+        this.parseNotes.push(
+          `${JSON.stringify(player1)} == ${JSON.stringify(player2)}`
+        );
       } else if (typeof player2 === "boolean") {
         player2 = player2 === true ? 1 : 0;
-        this.parseNotes.push(`${this.fstOperObj} == ${player2}`);
+        this.parseNotes.push(
+          `${JSON.stringify(player1)} == ${JSON.stringify(player2)}`
+        );
       }
 
       //抽象等价性：string与number
       if (typeof player1 === "string" && typeof player2 === "number") {
-        let num = parseFloat(player1);
-        if (JSON.stringify(num) === player1) {
-          player1 = num;
-        } else {
-          player1 = NaN;
-        }
-        this.parseNotes.push(`${player1} == ${this.secOperObj} //字符串与数字比较，字符串转换为数字`);
+        player1 = +player1;
+        this.parseNotes.push(
+          `${player1.toString()} == ${player2.toString()} //字符串与数字比较，字符串转换为数字`
+        );
       } else if (typeof player1 === "number" && typeof player2 === "string") {
-        let num = parseFloat(player2);
-        if (JSON.stringify(num) === player2) {
-          player2 = num;
-        } else {
-          player2 = NaN;
-        }
-        this.parseNotes.push(`${this.fstOperObj} == ${player2} //字符串与数字比较，字符串转换为数字`);
+        player2 = +player2;
+        this.parseNotes.push(
+          `${player1.toString()} == ${player2.toString()} //字符串与数字比较，字符串转换为数字`
+        );
       } else {
-        this.parseNotes.push(`${this.fstOperObj} == ${this.secOperObj}`);
+        this.parseNotes.push(`${player1.toString()} == ${player2.toString()}`);
       }
-      console.log(player1, player2);
+
+      this.parseNotes.push(`${player1 == player2}`);
+
+      return;
     },
     getResult() {
       let player1, player2;
@@ -183,8 +218,8 @@ export default {
       let contain = [];
       contain.push(typeof player1 === "object" && !player1);
       contain.push(typeof player1 === "undefined");
-      contain.push(typeof player2 === "null");
-      contain.push(typeof player2 === "undefined" && !player2);
+      contain.push(typeof player2 === "object" && !player2);
+      contain.push(typeof player2 === "undefined");
       let sum = contain.reduce(
         (accumulator, currentValue) => accumulator + currentValue
       );
