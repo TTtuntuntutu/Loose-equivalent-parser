@@ -5,6 +5,10 @@ loose-equivalent-parser 是一个单页面应用，可视化逐步解析 JavaScr
 
 Ok~ Just for fun!!!
 
+[获取结果](https://github.com/TTtuntuntutu/Loose-equivalent-parser/blob/master/%E8%8E%B7%E5%8F%96%E7%BB%93%E6%9E%9C.png)
+
+[解析](https://github.com/TTtuntuntutu/Loose-equivalent-parser/blob/master/%E8%A7%A3%E6%9E%90.png)
+
 ### 解析
 
 在解析过程遇到的问题与解决：
