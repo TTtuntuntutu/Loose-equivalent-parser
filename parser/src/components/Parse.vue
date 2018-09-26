@@ -92,20 +92,25 @@ export default {
       eval(`
         player1 = ${this.fstOperObj};
         player2 = ${this.secOperObj};
-      `)
+      `);
 
       //初始！
       this.parseNotes.push(
-        `${JSON.stringify(player1)} == ${JSON.stringify(player2)}`
+        `${this.getStringInfo(player1, player2)[0]} == ${
+          this.getStringInfo(player1, player2)[1]
+        }`
       );
 
       //如果两个都是对象，直接游戏结束(注意排除都是null的情况)
       if (
-        (typeof player1 === "object" &&  player1) &&
+        typeof player1 === "object" &&
+        player1 &&
         (typeof player2 === "object" && player2)
       ) {
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //两个都是引用值，直接false`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //两个都是引用值，直接false`
         );
         this.parseNotes.push(`false`);
         return;
@@ -114,17 +119,17 @@ export default {
       if (typeof player1 === "object" && player1) {
         player1 = this.toPrimitive(player1);
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(
-            player2
-          )} //对象转化为简单值`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //对象转化为简单值`
         );
       }
       if (typeof player2 === "object" && player2) {
         player2 = this.toPrimitive(player2);
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(
-            player2
-          )} //对象转化为简单值`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //对象转化为简单值`
         );
       }
 
@@ -140,30 +145,37 @@ export default {
         return;
       } else if (sum === 1) {
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(
-            player2
-          )} //false; 唯有null、undefined互相宽松等价相等`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //false; 唯有null、undefined互相宽松等价相等`
         );
         this.parseNotes.push(`false`);
         return;
       }
 
+      debugger;
       //抽象等价性： 任何东西与boolean
       if (typeof player1 === "boolean" && typeof player2 === "boolean") {
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //显而易见`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //同类型比较，显而易见`
         );
         this.parseNotes.push(`${player1 == player2}`);
         return;
       } else if (typeof player1 === "boolean") {
         player1 = player1 === true ? 1 : 0;
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //字符串转化为数字`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //布尔值转化为数字`
         );
       } else if (typeof player2 === "boolean") {
         player2 = player2 === true ? 1 : 0;
         this.parseNotes.push(
-          `${JSON.stringify(player1)} == ${JSON.stringify(player2)} //字符串转化为数字`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //布尔值转化为数字`
         );
       }
 
@@ -171,15 +183,23 @@ export default {
       if (typeof player1 === "string" && typeof player2 === "number") {
         player1 = +player1;
         this.parseNotes.push(
-          `${player1.toString()} == ${player2.toString()} //字符串与数字比较，字符串转换为数字`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //字符串与数字比较，字符串转换为数字`
         );
       } else if (typeof player1 === "number" && typeof player2 === "string") {
         player2 = +player2;
         this.parseNotes.push(
-          `${player1.toString()} == ${player2.toString()} //字符串与数字比较，字符串转换为数字`
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //字符串与数字比较，字符串转换为数字`
         );
       } else {
-        this.parseNotes.push(`${player1.toString()} == ${player2.toString()} //同类型比较，显而易见`);
+        this.parseNotes.push(
+          `${this.getStringInfo(player1, player2)[0]} == ${
+            this.getStringInfo(player1, player2)[1]
+          } //同类型比较，显而易见`
+        );
       }
 
       this.parseNotes.push(`${player1 == player2}`);
@@ -219,6 +239,17 @@ export default {
         (accumulator, currentValue) => accumulator + currentValue
       );
       return sum;
+    },
+    getStringInfo(player1, player2) {
+      let p1 =
+        typeof player1 === "number"
+          ? player1.toString()
+          : JSON.stringify(player1);
+      let p2 =
+        typeof player2 === "number"
+          ? player2.toString()
+          : JSON.stringify(player2);
+      return [p1, p2];
     }
   }
 };
