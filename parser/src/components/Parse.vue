@@ -4,7 +4,6 @@
             <b-row>
                 <b-col cols="4">
                     <div class="forms">
-                        <!-- <p>输入：</p> -->
                         <b-form-input 
                             v-model="fstOperObj"
                             type="text"></b-form-input>
@@ -32,7 +31,6 @@
             <b-row>
                 <b-col cols="4">
                     <div class="forms">
-                        <!-- <p>预测输出结果：</p> -->
                         <b-form-select v-model="preValue" :options="options" class="mb-3">
                         </b-form-select>
                     </div>
@@ -153,7 +151,6 @@ export default {
         return;
       }
 
-      debugger;
       //抽象等价性： 任何东西与boolean
       if (typeof player1 === "boolean" && typeof player2 === "boolean") {
         this.parseNotes.push(
