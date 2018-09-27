@@ -210,11 +210,11 @@ export default {
       if (res === this.preValue) {
         this.resTag = "✔";
         this.resNote = false;
-        this.res = true;
+        this.res = res;
       } else {
         this.resTag = "❌";
         this.resNote = true;
-        this.res = false;
+        this.res = res;
       }
     },
     toPrimitive(obj) {
