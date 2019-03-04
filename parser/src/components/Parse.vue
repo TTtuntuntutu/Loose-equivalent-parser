@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     parse() {
-      //信息清空
+      //原有解析信息清空
       while (this.parseNotes.length > 0) {
         this.parseNotes.pop();
       }
@@ -115,6 +115,7 @@ export default {
         this.parseNotes.push(`false`);
         return;
       }
+
       //抽象等价性：存在object,ToPrimitive(object)
       if (typeof player1 === "object" && player1) {
         player1 = this.toPrimitive(player1);
@@ -132,8 +133,7 @@ export default {
           } //对象转化为简单值`
         );
       }
-
-      //到这里，两个player均为简单值
+      //简化为取得简单值作为第一步
 
       //抽象等价性：考虑 null 与 undefined
       let sum = this.sumNullUndefined(player1, player2);
