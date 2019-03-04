@@ -83,6 +83,8 @@ export default {
         this.parseNotes.pop();
       }
 
+      this.fstOperObj = this.fstOperObj.replace(/\\/ig,"\\");
+      this.secOperObj = this.secOperObj.replace(/\\/ig,"\\");
       //结果显示
       this.getResult();
 
@@ -91,7 +93,7 @@ export default {
         player1 = ${this.fstOperObj};
         player2 = ${this.secOperObj};
       `);
-
+      
       //初始！
       this.parseNotes.push(
         `${this.getStringInfo(player1, player2)[0]} == ${
