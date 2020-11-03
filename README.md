@@ -1,17 +1,26 @@
 # Loose-equivalent-parser
-loose-equivalent-parser 是一个单页面应用，可视化逐步解析 JavaScript 中最令人困惑的宽松等价（`a == b`）。在看过YDKJS types&grammar 强制转换这一章节之后，尝试能否在宽松等价时，将一系列规则联合起来作为一个解决方案。
 
-选用了 ui框架 bootstrap-vue 中几个简单的组件，以及 Layout and Grid System 用于布局。平时在用 Vue 开发时，一直用的 iView ，想尝试一下不同 ui 框架。
+宽松等价在JavaScript中是个迷惑的话题， [JavaScript-Equality-Table](https://dorey.github.io/JavaScript-Equality-Table/) 可整体查看：
+
+> When using two equals signs for JavaScript equality testing, some funky conversions take place. 		
+
+
+
+项目 Loose-equivalent-parser 侧重点不同。允许用户输入比较的两个对象，获取结果：
+
+![结果](/img/result.png)
+
+也允许获得可视化，宽松等价过程的转化：
+
+![解析](/img/process.png)
+
+
+
+技术栈方面，这是一个Vue 2.x搭建的SPA，使用了bootstrap-vue 中几个简单的组件。
 
 Ok~ Just for fun!!!
 
-
-
-![获取结果](https://github.com/TTtuntuntutu/Loose-equivalent-parser/blob/master/%E8%8E%B7%E5%8F%96%E7%BB%93%E6%9E%9C.png)
-
-![解析](https://github.com/TTtuntuntutu/Loose-equivalent-parser/blob/master/%E8%A7%A3%E6%9E%90.png)
-
-### 解析
+## 解析
 
 在解析过程遇到的问题与解决：
 
@@ -76,7 +85,7 @@ Ok~ Just for fun!!!
 
    如果 `sum` 值为 `2` 说明结果`true`，值为 `1` 说明只有`null`、`undefined`其中一个，结果为`false`。这里还有一个小坑是用`typeof`判断`null`是得复合一个条件，即本身为`false`
 
-### 另外说明
+## 另外说明
 
 [YDKJS 抽象等价性 here](https://github.com/getify/You-Dont-Know-JS/blob/1ed-zh-CN/types%20%26%20grammar/ch4.md#抽象等价性)
 
